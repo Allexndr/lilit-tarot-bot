@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Дашборд - АРУАХ Админ-панель{% endblock %}
+{% block page_title %}Дашборд{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title text-white-50">Всего пользователей</h6>
+                        <div class="stat-number">{{ stats.total_users }}</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title text-white-50">Новые за 30 дней</h6>
+                        <div class="stat-number">{{ stats.new_users_30d }}</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-user-plus fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title text-white-50">Активные за 7 дней</h6>
+                        <div class="stat-number">{{ stats.active_users_7d }}</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-user-check fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-title text-white-50">Запросов за 30 дней</h6>
+                        <div class="stat-number">{{ stats.requests_30d }}</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-chart-line fa-2x text-white-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Доходы
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-success">{{ "%.0f"|format(stats.monthly_revenue / 100) }}₸</h4>
+                        <small class="text-muted">За месяц</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-primary">{{ "%.0f"|format(stats.total_revenue / 100) }}₸</h4>
+                        <small class="text-muted">Всего</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-users me-2"></i>
+                    Подписки
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <h6 class="text-muted">FREE</h6>
+                        <h5>{{ stats.subscription_stats.users_by_type.get('free', 0) }}</h5>
+                    </div>
+                    <div class="col-4">
+                        <h6 class="text-warning">PREMIUM</h6>
+                        <h5>{{ stats.subscription_stats.users_by_type.get('premium', 0) }}</h5>
+                    </div>
+                    <div class="col-4">
+                        <h6 class="text-success">VIP</h6>
+                        <h5>{{ stats.subscription_stats.users_by_type.get('vip', 0) }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Статистика запросов
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <h3 class="text-primary">{{ stats.total_requests }}</h3>
+                        <p class="text-muted">Всего запросов</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h3 class="text-success">{{ stats.requests_30d }}</h3>
+                        <p class="text-muted">За 30 дней</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h3 class="text-info">{{ "%.1f"|format(stats.requests_30d / 30) }}</h3>
+                        <p class="text-muted">В день (среднее)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

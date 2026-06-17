@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Пользователи - АРУАХ Админ-панель{% endblock %}
+{% block page_title %}Пользователи{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form method="get" class="d-flex">
+            <input class="form-control me-2" type="search" name="search" 
+                   placeholder="Поиск по имени или username..." 
+                   value="{{ search or '' }}">
+            <button class="btn btn-outline-primary" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+    <div class="col-md-6 text-end">
+        <span class="text-muted">
+            Всего: {{ users_data.total_count }} пользователей
+        </span>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя</th>
+                        <th>Username</th>
+                        <th>Подписка</th>
+                        <th>Запросы</th>
+                        <th>Регистрация</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users_data.users %}
+                    <tr>
+                        <td>{{ user.telegram_id }}</td>
+                        <td>
+                            {{ user.first_name or '' }} {{ user.last_name or '' }}
+                            {% if not user.first_name and not user.last_name %}
+                                <span class="text-muted">Не указано</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.username %}
+                                @{{ user.username }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.subscription_type == 'free' %}
+                                <span class="badge bg-secondary">FREE</span>
+                            {% elif user.subscription_type == 'premium' %}
+                                <span class="badge bg-warning">PREMIUM</span>
+                            {% elif user.subscription_type == 'vip' %}
+                                <span class="badge bg-success">VIP</span>
+                            {% else %}
+                                <span class="badge bg-light text-dark">{{ user.subscription_type }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small class="text-muted">{{ user.daily_requests }}/день</small><br>
+                            <small class="text-muted">{{ user.total_requests }} всего</small>
+                        </td>
+                        <td>
+                            <small>{{ user.registration_date.strftime('%d.%m.%Y') }}</small>
+                        </td>
+                        <td>
+                            <a href="/users/{{ user.telegram_id }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Пагинация -->
+        {% if users_data.total_pages > 1 %}
+        <nav aria-label="Навигация по страницам">
+            <ul class="pagination justify-content-center">
+                {% if users_data.page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ users_data.page - 1 }}{% if search %}&search={{ search }}{% endif %}">
+                        Предыдущая
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in range(1, users_data.total_pages + 1) %}
+                    {% if page_num == users_data.page %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page_num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_num }}{% if search %}&search={{ search }}{% endif %}">
+                            {{ page_num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if users_data.page < users_data.total_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ users_data.page + 1 }}{% if search %}&search={{ search }}{% endif %}">
+                        Следующая
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
